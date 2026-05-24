@@ -174,6 +174,12 @@ Single massive line:
 python3 -c "print('A' * 100000)" | ./program
 ```
 
+Multi line:
+
+```bash
+printf '\n%.0s' {1..10000} | ./program
+```
+
 Null bytes
 
 ```bash
