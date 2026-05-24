@@ -177,7 +177,7 @@ python3 -c "print('A' * 100000)" | ./program
 Null bytes
 
 ```bash
- printf 'hello\x00world\n' | ./minishell
+ printf 'hello\x00world\n' | ./program
 ```
 
 Many small lines fast:
