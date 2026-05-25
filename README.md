@@ -1,14 +1,16 @@
-# Review Cheat Sheet
+# Review Cheat Sheet 🧾
 
-Simple, fast, and a bit "hacker" tricks for code-reviewing
+Simple, fast, and a bit "hacker" tricks for code-reviewing 🧑‍💻
 
-## Format
+<p align="center"> <img src="img.png" alt="alt text" /> </p>
+
+## Format 🤖
 
 ```bash
 norminette .
 ```
 
-## Build and Inspect
+## Build and Inspect 🛠️
 
 Dry-run the build to see commands without executing:
 
@@ -40,19 +42,19 @@ Show all global variables:
 nm ./program | /bin/grep -E " [DBC] "
 ```
 
-Show password or secrets inside binary:
-
-```bash
-strings ./program | grep -E "pass|passwd|password|shadow|secret|ssh|key|API|token"
-```
-
 Show dependencies:
 
 ```bash
 ldd ./program
 ```
 
-## Security Check
+## Security Check 🔒
+
+Show password or secrets inside binary:
+
+```bash
+strings ./program | grep -E "pass|passwd|password|shadow|secret|ssh|key|API|token"
+```
 
 Analysis of the level of hardening:
 
@@ -66,7 +68,7 @@ Analysis of known vulnerabilities:
 opengrep scan --config p/c
 ```
 
-## Grep for Allocations and Error Controls
+## Grep for Allocations and Error Controls 🔎
 
 Find hot memory functions fast:
 
@@ -74,7 +76,7 @@ Find hot memory functions fast:
 grep -E "(malloc|calloc|realloc|free|strdup|strjoin|memcpy|memmove)" -R src/ -n -C 5
 ```
 
-## Memory and Leaks
+## Memory and Leaks 🧠
 
 Build with AddressSanitizer (ASan):
 
@@ -126,7 +128,7 @@ while kill -0 $PID 2>/dev/null; do
 done
 ```
 
-## Threads
+## Threads 🧵
 
 Find race conditions:
 
@@ -134,7 +136,7 @@ Find race conditions:
 make CC="gcc -Wall -Wextra -Werror -g3 -fsanitize=thread"
 ```
 
-## Resource Limits
+## Resource Limits ⏱️
 
 Peek at valgrind memory process stats while running:
 
@@ -154,7 +156,7 @@ Limit CPU time to catch hangs:
 ulimit -t 2; ./program
 ```
 
-## Tracing
+## Tracing 🔬
 
 Trace live-syscalls:
 
@@ -168,7 +170,7 @@ Trace resume syscalls:
 strace -c ./program
 ```
 
-## Performance
+## Performance ⚡
 
 Record performance of the program to understand which functions could be problematic (run your program, interact, and exit):
 
@@ -177,7 +179,7 @@ perf record --call-graph dwarf ./program
 perf report --dsos program
 ```
 
-## Heavy inputs
+## Heavy inputs 🧨
 
 Random input:
 
