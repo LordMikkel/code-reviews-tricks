@@ -16,6 +16,18 @@ Dry-run the build to see commands without executing:
 make -n
 ```
 
+Bad practice revealer
+
+```bash
+scan-build make
+```
+
+or
+
+```bash
+make CC="gcc -fanalyzer -Wall -Wextra -Werror"
+```
+
 Show undefined symbols (helps spot missing/forbidden calls):
 
 ```bash
@@ -40,6 +52,19 @@ Show dependencies:
 ldd ./program
 ```
 
+## Security Check
+
+Analysis of the level of hardening:
+
+```bash
+checksec file ./program
+```
+
+Analysis of known vulnerabilities:
+
+```bash
+opengrep scan --config p/c
+```
 
 ## Grep for Allocations and Error Controls
 
@@ -57,13 +82,7 @@ Build with AddressSanitizer (ASan):
 make CC="gcc -Wall -Wextra -Werror -g3 -fsanitize=address"
 ```
 
-Run with ASan:
-
-```bash
-./program
-```
-
-Valgrind
+Run with Valgrind
 
 ```bash
 valgrind \
@@ -105,6 +124,14 @@ while kill -0 $PID 2>/dev/null; do
   awk '/VmRSS/{print $2" KB"}' /proc/$PID/status
   sleep 0.5
 done
+```
+
+## Threads
+
+Find race conditions:
+
+```bash
+make CC="gcc -Wall -Wextra -Werror -g3 -fsanitize=thread"
 ```
 
 ## Resource Limits
