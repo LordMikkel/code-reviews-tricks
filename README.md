@@ -4,7 +4,7 @@ Simple, fast, and a few 'hacker' tricks for code review 🧑‍💻
 
 <p align="center"> <img src="img.png" alt="alt text" /> </p>
 
-## Format 🤖
+## Format 🤖 
 
 ```bash
 norminette .
