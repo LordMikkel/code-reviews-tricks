@@ -1,6 +1,6 @@
 # Review Cheat Sheet 🧾
 
-Simple, fast, and a bit "hacker" tricks for code-reviewing 🧑‍💻
+Simple, fast, and a few 'hacker' tricks for code review 🧑‍💻
 
 <p align="center"> <img src="img.png" alt="alt text" /> </p>
 
@@ -18,7 +18,7 @@ Dry-run the build to see commands without executing:
 make -n
 ```
 
-Bad practice revealer
+Bad practice detector:
 
 ```bash
 scan-build make
@@ -39,7 +39,7 @@ nm -u ./program
 Show all global variables:
 
 ```bash
-nm ./program | /bin/grep -E " [DBC] "
+nm ./program | grep -E " [DBC] "
 ```
 
 Show dependencies:
@@ -84,7 +84,7 @@ Build with AddressSanitizer (ASan):
 make CC="gcc -Wall -Wextra -Werror -g3 -fsanitize=address"
 ```
 
-Run with Valgrind
+Run with Valgrind:
 
 ```bash
 valgrind \
@@ -96,7 +96,19 @@ valgrind \
 	./program
 ```
 
-Invisible Leaks
+Convenience Alias:
+
+```bash
+alias all_leaks="valgrind \
+	--leak-check=full \
+	--show-leak-kinds=all \
+	--track-origins=yes \
+	--errors-for-leak-kinds=all \
+	--error-exitcode=1 \
+	./program"
+```
+
+Discover invisible Leaks:
 
 ```bash
 # Terminal 1
@@ -112,7 +124,7 @@ Then inside htop:
 - `F4` → filter by name
 - Watch **RES** column — if it grows over time → leak
 
-other way could be
+Another way could be:
 
 ```bash
 # Terminal 1
@@ -138,7 +150,7 @@ make CC="gcc -Wall -Wextra -Werror -g3 -fsanitize=thread"
 
 ## Resource Limits ⏱️
 
-Peek at valgrind memory process stats while running:
+Show peak memory usage for Valgrind and the program:
 
 ```bash
 cat /proc/$(pidof valgrind)/status
@@ -164,7 +176,7 @@ Trace live-syscalls:
 strace ./program
 ```
 
-Trace resume syscalls:
+Summarize syscalls:
 
 ```bash
 strace -c ./program
@@ -209,7 +221,7 @@ Multi line:
 printf '\n%.0s' {1..10000} | ./program
 ```
 
-Null bytes
+Null bytes:
 
 ```bash
  printf 'hello\x00world\n' | ./program
