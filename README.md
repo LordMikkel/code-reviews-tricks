@@ -4,7 +4,16 @@ Simple, fast, and a few 'hacker' tricks for code review 🧑‍💻
 
 <p align="center"> <img src="img.png" alt="alt text" /> </p>
 
-## Format 🤖 
+## Setup ⚙️
+
+Set these variables once:
+
+```bash
+PROGRAM="program"
+SRC="src"
+```
+
+## Format 🤖
 
 ```bash
 norminette .
@@ -33,19 +42,19 @@ make CC="gcc -fanalyzer -Wall -Wextra -Werror"
 Show undefined symbols (helps spot missing/forbidden calls):
 
 ```bash
-nm -u ./program
+nm -u ./$PROGRAM
 ```
 
 Show all global variables:
 
 ```bash
-nm ./program | grep -E " [DBC] "
+nm ./$PROGRAM | grep -E " [DBC] "
 ```
 
 Show dependencies:
 
 ```bash
-ldd ./program
+ldd ./$PROGRAM
 ```
 
 ## Security Check 🔒
@@ -53,13 +62,13 @@ ldd ./program
 Show password or secrets inside binary:
 
 ```bash
-strings ./program | grep -E "pass|passwd|password|shadow|secret|ssh|key|API|token"
+strings ./$PROGRAM | grep -E "pass|passwd|password|shadow|secret|ssh|key|API|token"
 ```
 
 Analysis of the level of hardening:
 
 ```bash
-checksec file ./program
+checksec file ./$PROGRAM
 ```
 
 Analysis of known vulnerabilities:
@@ -73,7 +82,7 @@ opengrep scan --config p/c
 Find hot memory functions fast:
 
 ```bash
-grep -E "(malloc|calloc|realloc|free|strdup|strjoin|memcpy|memmove)" -R src/ -n -C 5
+grep -E "(malloc|calloc|realloc|free|strdup|strjoin|memcpy|memmove)" -R $SRC -n -C 5
 ```
 
 ## Memory and Leaks 🧠
@@ -93,7 +102,7 @@ valgrind \
 	--track-origins=yes \
 	--errors-for-leak-kinds=all \
 	--error-exitcode=1 \
-	./program
+	./$PROGRAM
 ```
 
 Convenience Alias:
@@ -103,21 +112,21 @@ alias all_leaks="valgrind \
 	--leak-check=full \
 	--show-leak-kinds=all \
 	--track-origins=yes \
+	--track-fds=yes \
 	--errors-for-leak-kinds=all \
-	--error-exitcode=1 \
-	./program"
+	--error-exitcode=1"
 ```
 
 Discover invisible Leaks:
 
 ```bash
 # Terminal 1
-./program
+./$PROGRAM
 ```
 
 ```bash
 # Terminal 2
-htop -p $(pidof program)
+htop -p $(pidof $PROGRAM)
 ```
 
 Then inside htop:
@@ -128,12 +137,12 @@ Another way could be:
 
 ```bash
 # Terminal 1
-./program
+./$PROGRAM
 ```
 
 ```bash
 # Terminal 2
-PID=$(pidof program)
+PID=$(pidof $PROGRAM)
 while kill -0 $PID 2>/dev/null; do
   awk '/VmRSS/{print $2" KB"}' /proc/$PID/status
   sleep 0.5
@@ -159,13 +168,13 @@ cat /proc/$(pidof valgrind)/status
 Limit virtual memory to force edge cases:
 
 ```bash
-(ulimit -v 200000; all_leaks ./program)
+(ulimit -v 200000; all_leaks ./$PROGRAM)
 ```
 
 Limit CPU time to catch hangs:
 
 ```bash
-ulimit -t 2; ./program
+ulimit -t 2; ./$PROGRAM
 ```
 
 ## Tracing 🔬
@@ -173,13 +182,13 @@ ulimit -t 2; ./program
 Trace live-syscalls:
 
 ```bash
-strace ./program
+strace ./$PROGRAM
 ```
 
 Summarize syscalls:
 
 ```bash
-strace -c ./program
+strace -c ./$PROGRAM
 ```
 
 ## Performance ⚡
@@ -187,8 +196,8 @@ strace -c ./program
 Record performance of the program to understand which functions could be problematic (run your program, interact, and exit):
 
 ```bash
-perf record --call-graph dwarf ./program
-perf report --dsos program
+perf record --call-graph dwarf ./$PROGRAM
+perf report --dsos $PROGRAM
 ```
 
 ## Heavy inputs 🧨
@@ -196,39 +205,39 @@ perf report --dsos program
 Random input:
 
 ```bash
-./program < /dev/urandom
+./$PROGRAM < /dev/urandom
 ```
 
 ```bash
-head -c 4096 /dev/urandom | ./program
+head -c 4096 /dev/urandom | ./$PROGRAM
 ```
 
 Huge input:
 
 ```bash
-yes "A" | head -c 5M | ./program
+yes "A" | head -c 5M | ./$PROGRAM
 ```
 
 Single massive line:
 
 ```bash
-python3 -c "print('A' * 100000)" | ./program
+python3 -c "print('A' * 100000)" | ./$PROGRAM
 ```
 
 Multi line:
 
 ```bash
-printf '\n%.0s' {1..10000} | ./program
+printf '\n%.0s' {1..10000} | ./$PROGRAM
 ```
 
 Null bytes:
 
 ```bash
- printf 'hello\x00world\n' | ./program
+printf 'hello\x00world\n' | ./$PROGRAM
 ```
 
 Many small lines fast:
 
 ```bash
-seq 1 200000 | ./program
+seq 1 200000 | ./$PROGRAM
 ```
