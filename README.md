@@ -10,6 +10,9 @@ Set these variables once:
 
 ```bash
 PROGRAM="program"
+```
+
+```bash
 SRC="src"
 ```
 
